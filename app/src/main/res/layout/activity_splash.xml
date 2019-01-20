@@ -1,22 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient_view">
+    android:background="@drawable/gradient_view"
+    android:layout_gravity="center">
+
     <TextView
+        android:id="@+id/splash_text1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/splash_text1"
-        android:text="SOUL"
-        android:textSize="55sp"
-        android:textStyle="bold"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="@string/soul"
+        android:textColor="#FFFFFF"
+        android:textSize="56sp"
+        android:textStyle="bold" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/splash_text2"
         android:layout_below="@+id/splash_text1"
-        android:text="MUSIC PLAYER"
+        android:text="@string/music_player"
         android:layout_centerInParent="true"
-        android:textSize="20sp"/>
+        android:textSize="20sp"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"/>
 </RelativeLayout>
