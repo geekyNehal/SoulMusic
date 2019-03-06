@@ -35,10 +35,13 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        FragmentManager fragmentManager=getSupportFragmentManager();
+        /*FragmentManager fragmentManager=getSupportFragmentManager();
         FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
         MainScreenFragment mainScreenFragment=new MainScreenFragment();
         fragmentTransaction.add(R.id.details_fragment,mainScreenFragment);
+        fragmentTransaction.commit();*/
+        FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.details_fragment,new MainScreenFragment());
         fragmentTransaction.commit();
     }
 
