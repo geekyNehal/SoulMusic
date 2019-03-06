@@ -4,22 +4,24 @@ import android.net.Uri;
 
 public class Songs
 {
-    private String song_name,song_album,song_path,duration,dateIndex;
+    private String song_name,song_album,song_artist,song_path,duration,dateIndex;
     private Uri songUri;
     private int songId;
     public Songs()
     {
 
     }
-    public Songs(String song_name,int id,String song_album,String song_path,String duration,String dateIndex,Uri uri)
+    public Songs(String song_name,int id,String song_album,String song_artist,String song_path,String duration,String dateIndex,Uri uri)
     {
         this.song_name=song_name;
         this.song_album=song_album;
         this.songId=id;
+        this.song_artist=song_artist;
         this.song_path=song_path;
         this.duration=duration;
         this.dateIndex=dateIndex;
         this.songUri=uri;
+
     }
     public String getSongName()
     {
@@ -28,6 +30,10 @@ public class Songs
     public String getSongAlbum()
     {
         return song_album;
+    }
+    public String getSong_artist()
+    {
+        return song_artist;
     }
     public String getSongPath() {
         return song_path;
@@ -55,6 +61,11 @@ public class Songs
 
     public void setSongAlbum(String song_album) {
         this.song_album = song_album;
+    }
+
+    public  void setSongArtist(String song_artist)
+    {
+        this.song_artist=song_artist;
     }
 
     public void setSongPath(String song_path) {

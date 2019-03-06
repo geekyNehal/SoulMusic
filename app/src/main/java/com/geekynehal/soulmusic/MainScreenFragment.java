@@ -8,47 +8,31 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+import Adapters.MainScreenAdapter;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link MainScreenFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link MainScreenFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class MainScreenFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     RelativeLayout visibleLayout;
     RecyclerView recyclerViewMainScreen;
     RelativeLayout noSongs;
-    ArrayList<String> songList;
-
-    public MainScreenFragment() {
-        // Required empty public constructor
-    }
-
-
-    // TODO: Rename and change types and number of parameters
-    public static MainScreenFragment newInstance(String param1, String param2) {
-        MainScreenFragment fragment = new MainScreenFragment();
-        Bundle args = new Bundle();
-
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    ArrayList<Songs> songList;
+    MainScreenAdapter mainScreenAdapter;
+    Context context;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -68,14 +52,42 @@ public class MainScreenFragment extends Fragment {
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState)
+    {
+        super.onActivityCreated(savedInstanceState);
+        try
+        {
+            songList=getSongFromPhone();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        if(songList==null)
+        {
+            visibleLayout.setVisibility(View.INVISIBLE);
+            noSongs.setVisibility(View.INVISIBLE);
+        }
+        else
+        {
+            mainScreenAdapter= new MainScreenAdapter(songList,getContext());
+            RecyclerView.LayoutManager mlayoutManager=new LinearLayoutManager(getContext());
+            recyclerViewMainScreen.setLayoutManager(mlayoutManager);
+            recyclerViewMainScreen.setItemAnimator(new DefaultItemAnimator());
+            recyclerViewMainScreen.setAdapter(mainScreenAdapter);
+        }
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
+        this.context=context;
+       /* if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
-        }
+        }*/
     }
 
     @Override
@@ -100,6 +112,7 @@ public class MainScreenFragment extends Fragment {
                     String[] res=data.split("\\.");
                     songs.setSongName(res[0]);
                     songs.setSongId(cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media._ID)));
+                    songs.setSongArtist(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST)));
                     songs.setSongAlbum(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM)));
                     songs.setSongPath(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA)));
                     songs.setSongUri(ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media._ID))));
@@ -109,6 +122,9 @@ public class MainScreenFragment extends Fragment {
                     songArrayList.add(songs);
                 } while (cursor.moveToNext());
             }
+        }
+        else{
+            Toast.makeText(context, "hello", Toast.LENGTH_SHORT).show();
         }
         cursor.close();
         return songArrayList;
@@ -123,6 +139,7 @@ public class MainScreenFragment extends Fragment {
          long minute=TimeUnit.MILLISECONDS.toMinutes(millis);
          millis-=TimeUnit.MINUTES.toMillis(minute);
          long second=TimeUnit.MILLISECONDS.toSeconds(millis);
+         //1 minute=60000 milliseconds
          StringBuilder stringBuilder=new StringBuilder(6);
          stringBuilder.append(minute<10? "0"+minute:minute);
          stringBuilder.append(":");
